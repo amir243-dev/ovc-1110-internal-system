@@ -7,7 +7,7 @@ const studentSchema = new mongoose.Schema({
   gender: { type: String, required: true, enum: ["Male", "Female"] },
   school: { type: String, required: true },
   guardianName: { type: String, required: true },
-  guardianPhoneNumber: { type: String, rquired: true },
+  guardianPhone: { type: String, rquired: true },
   needs: [{ type: String }],
   createdAt: { type: Date, default: Date.now() },
 });
