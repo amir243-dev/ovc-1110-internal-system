@@ -47,4 +47,17 @@ const createStudent = async (req, res) => {
   }
 };
 
-module.exports = { createStudent };
+// =======================================================
+
+const getStudents = async (req, res) => {
+  try {
+    // .find() with no arguments returns all documents in the collection
+    const students = await Student.find();
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// /=======================================================
+module.exports = { createStudent, getStudents };
