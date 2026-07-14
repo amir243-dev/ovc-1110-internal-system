@@ -9,7 +9,7 @@ const studentSchema = new mongoose.Schema({
   guardianName: { type: String, required: true },
   guardianPhone: { type: String, rquired: true },
   needs: [{ type: String }],
-  createdAt: { type: Date, default: Date.now() },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Student", studentSchema);
