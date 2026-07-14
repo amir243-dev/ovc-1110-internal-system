@@ -43,7 +43,7 @@ const createStudent = async (req, res) => {
     return res.status(201).json(student);
   } catch (error) {
     // If Mongoose validation fails (e.g., invalid enum for gender), it throws an error
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

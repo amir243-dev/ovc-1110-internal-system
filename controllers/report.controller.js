@@ -16,7 +16,7 @@ const getReport = async (req, res) => {
     const reports = await Report.find();
     res.status(200).json(reports);
   } catch (error) {
-    res.status(400).json({ mesage: error.message });
+    res.status(500).json({ mesage: error.message });
   }
 };
 
