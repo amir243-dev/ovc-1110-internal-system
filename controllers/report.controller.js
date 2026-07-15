@@ -1,24 +1,17 @@
 const Report = require("../models/report.model");
+const asyncHandler = require("../utils/asyncHandler");
 
-const createReport = async (req, res) => {
-  try {
-    const report = await Report.create(req.body);
-    res.status(201).json(report);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+const createReport = asyncHandler(async (req, res) => {
+  const report = await Report.create(req.body);
+  res.status(201).json(report);
+});
 
 // ================================================
 
-const getReport = async (req, res) => {
-  try {
-    const reports = await Report.find();
-    res.status(200).json(reports);
-  } catch (error) {
-    res.status(500).json({ mesage: error.message });
-  }
-};
+const getReport = asyncHandler(async (req, res) => {
+  const reports = await Report.find();
+  res.status(200).json(reports);
+});
 
 // ==============================================
 

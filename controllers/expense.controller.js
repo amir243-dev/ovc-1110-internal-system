@@ -1,23 +1,16 @@
 const Expense = require("../models/expense.model");
+const asyncHandler = require("../utils/asyncHandler");
 
-const createExpense = async (req, res) => {
-  try {
-    const expense = await Expense.create(req.body);
-    res.status(201).json(expense);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+const createExpense = asyncHandler(async (req, res) => {
+  const expense = await Expense.create(req.body);
+  res.status(201).json(expense);
+});
 
 // =================================
 
-const getExpenses = async (req, res) => {
-  try {
-    const expenses = await Expense.find();
-    res.status(200).json(expenses);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+const getExpenses = asyncHandler(async (req, res) => {
+  const expenses = await Expense.find();
+  res.status(200).json(expenses);
+});
 
 module.exports = { createExpense, getExpenses };

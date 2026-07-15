@@ -1,23 +1,16 @@
 const Attendance = require("../models/attendance.model");
+const asyncHandler = require("../utils/asyncHandler");
 
-const createAttendance = async (req, res) => {
-  try {
-    const attendance = await Attendance.create(req.body);
-    res.status(201).json(attendance);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+const createAttendance = asyncHandler(async (req, res) => {
+  const attendance = await Attendance.create(req.body);
+  res.status(201).json(attendance);
+});
 
 // ===============================
 
-const getAttendance = async (req, res) => {
-  try {
-    const attendance = await Attendance.find();
-    res.status(200).json(attendance);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+const getAttendance = asyncHandler(async (req, res) => {
+  const attendance = await Attendance.find();
+  res.status(200).json(attendance);
+});
 
 module.exports = { createAttendance, getAttendance };
