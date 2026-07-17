@@ -1,5 +1,6 @@
 const Student = require("../models/student.model");
 const asyncHandler = require("../utils/asyncHandler");
+const sendResponse = require("../utils/apiResponse");
 
 // =======================================================
 // @desc    Create a new student
@@ -33,9 +34,7 @@ const createStudent = asyncHandler(async (req, res) => {
     needs: needs || [], // Defaults to empty array if not provided
   });
 
-  // 4. Return the created student
-  return res.status(201).json(student);
-  // If Mongoose validation fails (e.g., invalid enum for gender), it throws an error
+  sendResponse(res, 201, student, "Student created Successfully");
 });
 
 // =======================================================
@@ -44,7 +43,7 @@ const createStudent = asyncHandler(async (req, res) => {
 const getStudents = asyncHandler(async (req, res) => {
   // .find() with no arguments returns all documents in the collection
   const students = await Student.find();
-  res.status(200).json(students);
+  sendResponse(res, 200, students, "Students retrieved Sucessfully");
 });
 
 // /=======================================================

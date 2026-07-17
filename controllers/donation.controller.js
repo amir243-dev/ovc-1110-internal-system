@@ -1,14 +1,15 @@
 const Donation = require("../models/donation.model");
 const asyncHandler = require("../utils/asyncHandler");
+const sendResponse = require("../utils/apiResponse");
 
 const createDonation = asyncHandler(async (req, res) => {
   const donation = await Donation.create(req.body);
-  res.status(201).json(donation);
+  sendResponse(res, 201, donation, "Donation saved successfully");
 });
 
 const getDonations = asyncHandler(async (req, res) => {
   const donations = await Donation.find();
-  res.status(200).json(donations);
+  sendResponse(res, 200, donations, "Donations retrieved Successfully");
 });
 
 module.exports = { createDonation, getDonations };

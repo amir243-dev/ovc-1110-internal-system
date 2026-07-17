@@ -1,16 +1,22 @@
 const Attendance = require("../models/attendance.model");
 const asyncHandler = require("../utils/asyncHandler");
+const sendResponse = require("../utils/apiResponse");
 
 const createAttendance = asyncHandler(async (req, res) => {
   const attendance = await Attendance.create(req.body);
-  res.status(201).json(attendance);
+  sendResponse(res, 201, attendance, "Attendance Entry saved Successfully");
 });
 
 // ===============================
 
 const getAttendance = asyncHandler(async (req, res) => {
   const attendance = await Attendance.find();
-  res.status(200).json(attendance);
+  sendResponse(
+    res,
+    200,
+    attendance,
+    "Atendance Entries retrieved Successfully",
+  );
 });
 
 module.exports = { createAttendance, getAttendance };
