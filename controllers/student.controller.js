@@ -46,5 +46,21 @@ const getStudents = asyncHandler(async (req, res) => {
   sendResponse(res, 200, students, "Students retrieved Sucessfully");
 });
 
+// ===========================================================
+// @desc    Get single student by ID
+
+const getStudentByID = asyncHandler(async (req, res, next) => {
+  // 1. Try to find the student
+  const student = await Student.findById(req.params.id);
+
+  // 2. If no student exists, return 404
+  if (!student) {
+    res.status(404);
+    throw new Error("Student not Found");
+  }
+
+  // 3. If found, return 200
+  sendResponse(res, 200, student, "Student Retrieved successfully");
+});
 // /=======================================================
-module.exports = { createStudent, getStudents };
+module.exports = { createStudent, getStudents, getStudentByID };

@@ -14,4 +14,20 @@ const getExpenses = asyncHandler(async (req, res) => {
   sendResponse(res, 200, expenses, "Expenses retrieved Sucessfully");
 });
 
-module.exports = { createExpense, getExpenses };
+// ====================================
+
+const getExpenseByID = asyncHandler(async (req, res, next) => {
+  // 1. Try to find the student
+  const expense = await Expense.findById(req.params.id);
+
+  // 2. If no student exists, return 404
+  if (!expense) {
+    res.status(404);
+    throw new Error("Expense not Found");
+  }
+
+  // 3. If found, return 200
+  sendResponse(res, 200, expense, "Expense Retrieved successfully");
+});
+
+module.exports = { createExpense, getExpenses, getExpenseByID };

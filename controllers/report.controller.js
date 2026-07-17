@@ -15,5 +15,20 @@ const getReport = asyncHandler(async (req, res) => {
 });
 
 // ==============================================
+const getReportByID = asyncHandler(async (req, res, next) => {
+  // 1. Try to find the student
+  const report = await Report.findById(req.params.id);
 
-module.exports = { createReport, getReport };
+  // 2. If no student exists, return 404
+  if (!report) {
+    res.status(404);
+    throw new Error("Report not Found");
+  }
+
+  // 3. If found, return 200
+  sendResponse(res, 200, report, "Report Retrieved successfully");
+});
+
+// ==============================================
+
+module.exports = { createReport, getReport, getReportByID };
