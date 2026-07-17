@@ -32,7 +32,8 @@ const errorHandler = (err, req, res, next) => {
       .join(", ");
     error = { message, statusCode: 400 };
   }
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  const statusCode =
+    error.statusCode || (res.statusCode === 200 ? 500 : res.statusCode);
 
   res.status(statusCode).json({
     message: error.message,
