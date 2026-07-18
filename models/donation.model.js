@@ -6,6 +6,7 @@ const donationSchema = new mongoose.Schema({
   // 'type' is a reserved word in some contexts, but fine as a key.
   // Using enum to restrict it to Cash or Kind (goods).
   type: { type: String, required: true, enum: ["Cash", "Items"] },
+  description: { type: String },
   amount: { type: Number, required: true },
   contact: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
