@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Record Donation</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      input,
+      select {
+        padding: 8px;
+        font-size: 16px;
+      }
+      button {
+        padding: 10px;
+        background-color: #ffc107;
+        color: #212529;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      button:hover {
+        background-color: #e0a800;
+      }
+      #message {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Record New Donation</h1>
+
+    <form id="donationForm">
+      <input type="date" id="date" required />
+      <input type="text" id="donorName" placeholder="Donor Name" required />
+
+      <select id="type" required>
+        <option value="">Select Donation Type</option>
+        <option value="Cash">Cash</option>
+        <option value="Kind">Kind (Goods/Items)</option>
+      </select>
+
+      <input
+        type="text"
+        id="description"
+        placeholder="Description (e.g., 10 Laptops, or leave blank if Cash)"
+      />
+
+      <input
+        type="number"
+        id="amount"
+        placeholder="Estimated Amount (NGN)"
+        required
+      />
+      <input
+        type="text"
+        id="contact"
+        placeholder="Contact Phone/Email"
+        required
+      />
+
+      <button type="submit">Record Donation</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+      const form = document.getElementById("donationForm");
+      const messageEl = document.getElementById("message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+          date: document.getElementById("date").value,
+          donorName: document.getElementById("donorName").value,
+          type: document.getElementById("type").value,
+          description: document.getElementById("description").value || null,
+          amount: Number(document.getElementById("amount").value),
+          contact: document.getElementById("contact").value,
+        };
+
+        try {
+          const response = await fetch("/api/donations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            messageEl.style.color = "green";
+            messageEl.textContent = "Donation recorded successfully!";
+            form.reset();
+          } else {
+            messageEl.style.color = "red";
+            messageEl.textContent = `Error: ${result.message}`;
+          }
+        } catch (error) {
+          messageEl.style.color = "red";
+          messageEl.textContent = "Server error. Please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>
