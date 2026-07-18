@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Attendance</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      input,
+      textarea {
+        padding: 8px;
+        font-size: 16px;
+        font-family: inherit;
+      }
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      button {
+        padding: 10px;
+        background-color: #17a2b8;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #138496;
+      }
+      #message {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .hint {
+        font-size: 12px;
+        color: #666;
+        margin-top: -10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Record Attendance</h1>
+
+    <form id="attendanceForm">
+      <input type="date" id="date" required />
+      <input type="text" id="program" placeholder="Program Name" required />
+      <input
+        type="text"
+        id="supervisor"
+        placeholder="Supervisor Name"
+        required
+      />
+
+      <textarea
+        id="students"
+        placeholder="Student Names (separate with commas)"
+        required
+      ></textarea>
+      <p class="hint">e.g., Amir, John, Sarah, Musa</p>
+
+      <button type="submit">Submit Attendance</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+      const form = document.getElementById("attendanceForm");
+      const messageEl = document.getElementById("message");
+
+      const parseArray = (text) => {
+        return text
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item !== "");
+      };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+          date: document.getElementById("date").value,
+          program: document.getElementById("program").value,
+          supervisor: document.getElementById("supervisor").value,
+          students: parseArray(document.getElementById("students").value),
+        };
+
+        try {
+          const response = await fetch("/api/attendance", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            messageEl.style.color = "green";
+            messageEl.textContent = "Attendance recorded successfully!";
+            form.reset();
+          } else {
+            messageEl.style.color = "red";
+            messageEl.textContent = `Error: ${result.message}`;
+          }
+        } catch (error) {
+          messageEl.style.color = "red";
+          messageEl.textContent = "Server error. Please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>
