@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Dashboard</title>
+    <style>
+      :root {
+        --bg: #f8f9fa;
+        --text: #212529;
+        --muted: #6c757d;
+        --border: #dee2e6;
+        --accent: #495057;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 40px 20px;
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-weight: 600;
+        margin-bottom: 40px;
+        color: var(--accent);
+      }
+      .section {
+        margin-bottom: 50px;
+      }
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 8px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+      th {
+        background-color: #fff;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+      .empty {
+        padding: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>OVC1110 Internal Dashboard</h1>
+
+      <!-- Students -->
+      <div class="section">
+        <h2>Students</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>School</th>
+            </tr>
+          </thead>
+          <tbody id="students-body">
+            <tr>
+              <td colspan="3" class="empty">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Reports -->
+      <div class="section">
+        <h2>Activity Reports</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Date</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody id="reports-body">
+            <tr>
+              <td colspan="3" class="empty">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Attendance -->
+      <div class="section">
+        <h2>Attendance</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Date</th>
+              <th>Supervisor</th>
+            </tr>
+          </thead>
+          <tbody id="attendance-body">
+            <tr>
+              <td colspan="3" class="empty">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Expenses -->
+      <div class="section">
+        <h2>Expenses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Amount (NGN)</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="expenses-body">
+            <tr>
+              <td colspan="3" class="empty">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Donations -->
+      <div class="section">
+        <h2>Donations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Donor</th>
+              <th>Type</th>
+              <th>Amount (NGN)</th>
+            </tr>
+          </thead>
+          <tbody id="donations-body">
+            <tr>
+              <td colspan="3" class="empty">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // Reusable function to fetch and render data
+      async function loadModule(endpoint, tableId, renderRow) {
+        const tbody = document.getElementById(tableId);
+        try {
+          const response = await fetch(endpoint);
+          const result = await response.json();
+
+          tbody.innerHTML = ""; // Clear loading state
+
+          if (result.success && result.data.length > 0) {
+            result.data.forEach((item) => {
+              tbody.innerHTML += renderRow(item);
+            });
+          } else {
+            tbody.innerHTML =
+              '<tr><td colspan="3" class="empty">No records found.</td></tr>';
+          }
+        } catch (error) {
+          tbody.innerHTML =
+            '<tr><td colspan="3" class="empty">Failed to load data.</td></tr>';
+        }
+      }
+
+      // Initialize all modules
+      document.addEventListener("DOMContentLoaded", () => {
+        loadModule(
+          "/api/students",
+          "students-body",
+          (s) =>
+            `<tr><td>${s.fullName}</td><td>${s.age}</td><td>${s.school}</td></tr>`,
+        );
+
+        loadModule(
+          "/api/reports",
+          "reports-body",
+          (r) =>
+            `<tr><td>${r.program}</td><td>${new Date(r.date).toLocaleDateString()}</td><td>${r.location}</td></tr>`,
+        );
+
+        loadModule(
+          "/api/attendance",
+          "attendance-body",
+          (a) =>
+            `<tr><td>${a.program}</td><td>${new Date(a.date).toLocaleDateString()}</td><td>${a.supervisor}</td></tr>`,
+        );
+
+        loadModule(
+          "/api/expenses",
+          "expenses-body",
+          (e) =>
+            `<tr><td>${e.item}</td><td>₦${e.amount.toLocaleString()}</td><td>${new Date(e.date).toLocaleDateString()}</td></tr>`,
+        );
+
+        loadModule(
+          "/api/donations",
+          "donations-body",
+          (d) =>
+            `<tr><td>${d.donorName}</td><td>${d.type}</td><td>₦${d.amount.toLocaleString()}</td></tr>`,
+        );
+      });
+    </script>
+  </body>
+</html>
