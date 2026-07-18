@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Activity Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      input,
+      textarea,
+      select {
+        padding: 8px;
+        font-size: 16px;
+        font-family: inherit;
+      }
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+      button {
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #message {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .hint {
+        font-size: 12px;
+        color: #666;
+        margin-top: -10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Submit Activity Report</h1>
+
+    <form id="reportForm">
+      <input type="date" id="date" required />
+      <input type="text" id="program" placeholder="Program Name" required />
+      <input type="text" id="location" placeholder="Location" required />
+
+      <input
+        type="number"
+        id="numberOfChildren"
+        placeholder="Number of Children"
+        required
+      />
+      <input
+        type="number"
+        id="numberOfStaff"
+        placeholder="Number of Staff"
+        required
+      />
+
+      <textarea
+        id="activities"
+        placeholder="Activities (separate with commas)"
+        required
+      ></textarea>
+      <p class="hint">e.g., Math tutoring, Reading session, Sports</p>
+
+      <textarea
+        id="challenges"
+        placeholder="Challenges (separate with commas)"
+      ></textarea>
+      <textarea
+        id="solutions"
+        placeholder="Solutions (separate with commas)"
+      ></textarea>
+
+      <input
+        type="text"
+        id="submittedBy"
+        placeholder="Submitted By (Your Name)"
+        required
+      />
+
+      <button type="submit">Submit Report</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+      const form = document.getElementById("reportForm");
+      const messageEl = document.getElementById("message");
+
+      // Helper to convert comma-separated text into a clean array
+      const parseArray = (text) => {
+        return text
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item !== "");
+      };
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+          date: document.getElementById("date").value,
+          program: document.getElementById("program").value,
+          location: document.getElementById("location").value,
+          numberOfChildren: Number(
+            document.getElementById("numberOfChildren").value,
+          ),
+          numberOfStaff: Number(document.getElementById("numberOfStaff").value),
+          activities: parseArray(document.getElementById("activities").value),
+          challenges: parseArray(document.getElementById("challenges").value),
+          solutions: parseArray(document.getElementById("solutions").value),
+          submittedBy: document.getElementById("submittedBy").value,
+        };
+
+        try {
+          const response = await fetch("/api/reports", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            messageEl.style.color = "green";
+            messageEl.textContent = "Report submitted successfully!";
+            form.reset();
+          } else {
+            messageEl.style.color = "red";
+            messageEl.textContent = `Error: ${result.message}`;
+          }
+        } catch (error) {
+          messageEl.style.color = "red";
+          messageEl.textContent = "Server error. Please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>
