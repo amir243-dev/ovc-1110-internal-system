@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Record Expense</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      input {
+        padding: 8px;
+        font-size: 16px;
+      }
+      button {
+        padding: 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #c82333;
+      }
+      #message {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Record New Expense</h1>
+
+    <form id="expenseForm">
+      <input type="date" id="date" required />
+      <input
+        type="text"
+        id="item"
+        placeholder="Item Description (e.g., Rice for feeding)"
+        required
+      />
+      <input type="number" id="amount" placeholder="Amount (NGN)" required />
+      <input type="text" id="approvedBy" placeholder="Approved By" required />
+
+      <button type="submit">Record Expense</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+      const form = document.getElementById("expenseForm");
+      const messageEl = document.getElementById("message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+          date: document.getElementById("date").value,
+          item: document.getElementById("item").value,
+          amount: Number(document.getElementById("amount").value),
+          approvedBy: document.getElementById("approvedBy").value,
+        };
+
+        try {
+          const response = await fetch("/api/expenses", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            messageEl.style.color = "green";
+            messageEl.textContent = "Expense recorded successfully!";
+            form.reset();
+          } else {
+            messageEl.style.color = "red";
+            messageEl.textContent = `Error: ${result.message}`;
+          }
+        } catch (error) {
+          messageEl.style.color = "red";
+          messageEl.textContent = "Server error. Please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>
