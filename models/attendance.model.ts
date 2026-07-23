@@ -1,6 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, Document } from "mongoose";
+// THE INTERFACE
+export interface IAttendance extends Document {
+  program: string;
+  date: Date;
+  students?: string[];
+  supervisor: string;
+  createdAt: Date;
+}
 
-const attendanceSchema = new mongoose.Schema({
+const attendanceSchema = new Schema<IAttendance>({
   program: { type: String, required: true },
   date: { type: Date, required: true },
 
@@ -11,4 +19,6 @@ const attendanceSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Attendance", attendanceSchema);
+const Attendance = mongoose.model<IAttendance>("Attendance", attendanceSchema);
+
+export default Attendance;

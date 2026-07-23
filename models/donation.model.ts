@@ -1,6 +1,18 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, Document } from "mongoose";
 
-const donationSchema = new mongoose.Schema({
+// THE INTERFACE AGAIN.
+
+export interface IDonations extends Document {
+  date: Date;
+  donorName: string;
+  type: "Cash" | "Kind";
+  description?: string;
+  amount: number;
+  contact: string;
+  createdAt: Date;
+}
+
+const donationSchema = new Schema<IDonations>({
   date: { type: Date, required: true },
   donorName: { type: String, required: true },
   // 'type' is a reserved word in some contexts, but fine as a key.
@@ -12,4 +24,5 @@ const donationSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("Donation", donationSchema);
+const Donation = mongoose.model<IDonations>("Donation", donationSchema);
+export default Donation;
