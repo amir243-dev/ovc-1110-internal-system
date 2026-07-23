@@ -1,10 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
   createStudent,
   getStudents,
   getStudentByID,
-} = require("../controllers/student.controller");
+} from "../controllers/student.controller";
+
+const router = express.Router();
 
 // @route   POST /api/students
 router.post("/", createStudent);
@@ -15,4 +16,4 @@ router.get("/", getStudents);
 // @route GET /api/students/:id
 router.get("/:id", getStudentByID);
 
-module.exports = router;
+export default router;
