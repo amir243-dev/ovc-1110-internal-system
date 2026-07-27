@@ -1,7 +1,6 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "type": "commonjs",
   "description": "",
   "main": "server.js",
   "scripts": {
@@ -11,11 +10,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^5.22.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.7.4"
+    "mongoose": "^9.7.4",
+    "pg": "^8.22.0",
+    "prisma": "^5.22.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

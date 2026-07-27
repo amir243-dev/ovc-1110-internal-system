@@ -1,4 +1,4 @@
-const express = require("express");
+import express, { Request, Response } from "express";
 const cors = require("cors");
 const path = require("path");
 import studentRoutes from "./routes/student.routes";
@@ -20,17 +20,16 @@ app.use("/api/attendance", attendanceRoutes);
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/donations", donationRoutes);
 
-// Handle 404 errors (routes that don't exist)
-app.use(notFound);
-
-// Central error handler
-app.use(errorHandler);
-
-app.get("/health", (req, res) => {
+app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "System Online",
   });
 });
+// Handle 404 errors (routes that don't exist)
+app.use(notFound);
+
+// Central error handler
+app.use(errorHandler);
 
 module.exports = app;
