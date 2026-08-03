@@ -10,4 +10,15 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url = "postgresql://neondb_owner:npg_rONdZl5Xwbh9@ep-empty-queen-ay71saw4-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+}
+
+model Expense {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  item       String
+  amount     Float
+  approvedBy String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
