@@ -1,4 +1,4 @@
-const Attendance = require("../models/attendance.model");
+import Attendance from "../models/attendance.model";
 const asyncHandler = require("../utils/asyncHandler");
 const sendResponse = require("../utils/apiResponse");
 

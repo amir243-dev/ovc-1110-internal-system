@@ -1,4 +1,4 @@
-const Donation = require("../models/donation.model");
+import Donation from "../models/donation.model";
 const asyncHandler = require("../utils/asyncHandler");
 const sendResponse = require("../utils/apiResponse");
 

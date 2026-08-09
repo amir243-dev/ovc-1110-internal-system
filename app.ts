@@ -4,7 +4,7 @@ const path = require("path");
 import studentRoutes from "./routes/student.routes";
 const reportRoutes = require("./routes/report.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
-const expenseRoutes = require("./routes/expense.routes");
+import expenseRoutes from "./routes/expense.routes";
 const donationRoutes = require("./routes/donation.routes");
 const { errorHandler, notFound } = require("./middleware/error.middleware");
 

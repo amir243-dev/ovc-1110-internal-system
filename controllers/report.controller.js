@@ -1,4 +1,4 @@
-const Report = require("../models/report.model");
+import Report from "../models/report.model";
 const asyncHandler = require("../utils/asyncHandler");
 const sendResponse = require("../utils/apiResponse");
 
