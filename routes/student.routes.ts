@@ -4,16 +4,17 @@ import {
   getStudents,
   getStudentByID,
 } from "../controllers/student.controller";
+import { protect } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
 // @route   POST /api/students
-router.post("/", createStudent);
+router.post("/", protect, createStudent);
 
 // @route   GET /api/students
-router.get("/", getStudents);
+router.get("/", protect, getStudents);
 
 // @route GET /api/students/:id
-router.get("/:id", getStudentByID);
+router.get("/:id", protect, getStudentByID);
 
 export default router;
