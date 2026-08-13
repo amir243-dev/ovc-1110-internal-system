@@ -50,7 +50,7 @@ const loginStaff = asyncHandler(async (req: Request, res: Response) => {
     throw new Error("Invalid Password");
   }
   const token = jwt.sign(
-    { id: staff._id, name: staff.name, email: staff.email, role: staff.email },
+    { id: staff._id, name: staff.name, email: staff.email, role: staff.role },
     SECRET,
     { expiresIn: "1h" },
   );

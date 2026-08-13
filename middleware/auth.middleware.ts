@@ -33,7 +33,7 @@ const protect = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const adminOnly = (req: Request, res: Response, next: NextFunction) => {
-  if (req?.user !== "admin") {
+  if (req.user?.role !== "admin") {
     res.status(403);
     throw new Error("Forbidden - admins only");
   }

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import Expense from "../models/expense.model";
 import { prisma } from "../utils/prismaClient";
 import asyncHandler from "../utils/asyncHandler";
 import sendResponse from "../utils/apiResponse";
+import { send } from "node:process";
 
 const createExpense = asyncHandler(async (req: Request, res: Response) => {
   const { date, item, amount, approvedBy } = req.body;
@@ -47,4 +47,21 @@ const getExpenseByID = asyncHandler(
   },
 );
 
-export { createExpense, getExpenses, getExpenseByID };
+// ===========================================
+
+const deleteExpense = asyncHandler(async (req: Request, res: Response) => {
+  const expense = await prisma.expense.findUnique({
+    where: { id: Number(req.params.id) },
+  });
+  if (!expense) {
+    res.status(404);
+    throw new Error("Expense not Found");
+  }
+
+  await prisma.expense.delete({
+    where: { id: Number(req.params.id) },
+  });
+  sendResponse(res, 200, null, "Expense deleted successfully");
+});
+
+export { createExpense, getExpenses, getExpenseByID, deleteExpense };
