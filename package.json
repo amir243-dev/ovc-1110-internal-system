@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "dev": "npx tsx watch server.ts",
-    "start": "npx tsx server.ts"
+    "start": "npx tsx server.ts",
+    "postinstall": "prisma generate",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

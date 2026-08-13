@@ -34,4 +34,4 @@ app.use(notFound);
 // Central error handler
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
