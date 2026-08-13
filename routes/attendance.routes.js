@@ -5,9 +5,10 @@ const {
   getAttendance,
   getAttendanceByID,
 } = require("../controllers/attendance.controller");
+const { protect, adminOnly } = require("../middleware/auth.middleware");
 
-router.post("/", createAttendance);
-router.get("/", getAttendance);
-router.get("/:id", getAttendanceByID);
+router.post("/", protect, createAttendance);
+router.get("/", protect, getAttendance);
+router.get("/:id", protect, getAttendanceByID);
 
 module.exports = router;

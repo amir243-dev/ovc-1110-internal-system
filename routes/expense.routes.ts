@@ -4,10 +4,11 @@ import {
   getExpenses,
   getExpenseByID,
 } from "../controllers/expense.controller";
+import { protect, adminOnly } from "../middleware/auth.middleware";
 const router = express.Router();
 
-router.post("/", createExpense);
-router.get("/", getExpenses);
-router.get("/:id", getExpenseByID);
+router.post("/", protect, createExpense);
+router.get("/", protect, getExpenses);
+router.get("/:id", protect, getExpenseByID);
 
 export default router;

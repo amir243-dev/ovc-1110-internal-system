@@ -5,9 +5,10 @@ const {
   getDonations,
   getDonationByID,
 } = require("../controllers/donation.controller");
+const { protect, adminOnly } = require("../middleware/auth.middleware");
 
-router.post("/", createDonation);
-router.get("/", getDonations);
-router.get("/:id", getDonationByID);
+router.post("/", protect, createDonation);
+router.get("/", protect, getDonations);
+router.get("/:id", protect, getDonationByID);
 
 module.exports = router;

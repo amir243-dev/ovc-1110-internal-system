@@ -5,9 +5,10 @@ const {
   getReport,
   getReportByID,
 } = require("../controllers/report.controller");
+const { protect, adminOnly } = require("../middleware/auth.middleware");
 
-router.post("/", createReport);
-router.get("/", getReport);
-router.get("/:id", getReportByID);
+router.post("/", protect, createReport);
+router.get("/", protect, getReport);
+router.get("/:id", protect, getReportByID);
 
 module.exports = router;
