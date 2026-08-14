@@ -3,130 +3,347 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OVC1110 - Record Donation</title>
+    <title>Record Donation — OVC1110</title>
+    <link rel="icon" href="/gp.png" />
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 40px auto;
-        padding: 20px;
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-      form {
+
+      :root {
+        --gp-green: #1a472a;
+        --gp-green-light: #2d6a4f;
+        --gp-cream: #f0f4f1;
+        --gp-white: #ffffff;
+        --gp-red: #b91c1c;
+        --gp-text: #1f2937;
+        --gp-muted: #6b7280;
+        --gp-border: #d1d5db;
+        --gp-shadow: 0 4px 24px rgba(26, 71, 42, 0.08);
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--gp-cream);
+        color: var(--gp-text);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: var(--gp-green);
+        padding: 16px 20px;
         display: flex;
-        flex-direction: column;
-        gap: 15px;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+      .header img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      .header-text h1 {
+        color: var(--gp-white);
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .header-text p {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.75rem;
+        font-weight: 400;
+      }
+
+      .container {
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 28px 20px 60px;
+      }
+
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--gp-green-light);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      .back:hover {
+        text-decoration: underline;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gp-green);
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: var(--gp-white);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: var(--gp-shadow);
+        border: 1px solid #e5e7eb;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--gp-text);
+        margin-bottom: 6px;
       }
       input,
       select {
-        padding: 8px;
-        font-size: 16px;
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 1rem;
+        border: 1.5px solid var(--gp-border);
+        border-radius: 10px;
+        background: #fafbfb;
+        color: var(--gp-text);
+        font-family: inherit;
+        transition: all 0.2s ease;
+        -webkit-appearance: none;
+        appearance: none;
       }
-      button {
-        padding: 10px;
-        background-color: #ffc107;
-        color: #212529;
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--gp-green-light);
+        background: var(--gp-white);
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+      }
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 40px;
+      }
+
+      .hint {
+        font-size: 0.8rem;
+        color: var(--gp-muted);
+        margin-top: 6px;
+      }
+
+      .btn {
+        width: 100%;
+        padding: 16px;
+        margin-top: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--gp-white);
+        background: var(--gp-green);
         border: none;
-        font-size: 16px;
+        border-radius: 10px;
         cursor: pointer;
-        font-weight: bold;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        letter-spacing: 0.3px;
       }
-      button:hover {
-        background-color: #e0a800;
+      .btn:hover {
+        background: var(--gp-green-light);
       }
-      #message {
-        margin-top: 20px;
-        font-weight: bold;
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .msg {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        gap: 8px;
+      }
+      .msg.show {
+        display: flex;
+      }
+      .msg.success {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+      .msg.error {
+        background: #fee2e2;
+        color: var(--gp-red);
+        border: 1px solid #fecaca;
+      }
+
+      @media (max-width: 480px) {
+        .header img {
+          width: 40px;
+          height: 40px;
+        }
+        .header-text h1 {
+          font-size: 1rem;
+        }
+        .card {
+          padding: 22px;
+          border-radius: 14px;
+        }
+        .page-title {
+          font-size: 1.3rem;
+        }
+        input,
+        select {
+          padding: 16px;
+          font-size: 16px;
+        }
+        .btn {
+          padding: 18px;
+          font-size: 1.05rem;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Record New Donation</h1>
+    <header class="header">
+      <img src="/gp.png" alt="OVC1110 Logo" />
+      <div class="header-text">
+        <h1>Greenpeace OVC1110</h1>
+        <p>Helping Orphans & Vulnerable Children Escape Poverty</p>
+      </div>
+    </header>
 
-    <form id="donationForm">
-      <input type="date" id="date" required />
-      <input type="text" id="donorName" placeholder="Donor Name" required />
+    <main class="container">
+      <a href="/" class="back">← Back to Portal</a>
+      <h2 class="page-title">Record New Donation</h2>
 
-      <select id="type" required>
-        <option value="">Select Donation Type</option>
-        <option value="Cash">Cash</option>
-        <option value="Kind">Kind (Goods/Items)</option>
-      </select>
+      <div class="card">
+        <form id="donationForm">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" required />
+          </div>
 
-      <input
-        type="text"
-        id="description"
-        placeholder="Description (e.g., 10 Laptops, or leave blank if Cash)"
-      />
+          <div class="form-group">
+            <label for="donorName">Donor Name</label>
+            <input
+              type="text"
+              id="donorName"
+              placeholder="e.g. Alhaji Ibrahim"
+              required
+            />
+          </div>
 
-      <input
-        type="number"
-        id="amount"
-        placeholder="Estimated Amount (NGN)"
-        required
-      />
-      <input
-        type="text"
-        id="contact"
-        placeholder="Contact Phone/Email"
-        required
-      />
+          <div class="form-group">
+            <label for="type">Donation Type</label>
+            <select id="type" required>
+              <option value="" disabled selected>Select type</option>
+              <option value="Cash">Cash</option>
+              <option value="Kind">Kind (Goods / Items)</option>
+            </select>
+          </div>
 
-      <button type="submit">Record Donation</button>
-    </form>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              id="description"
+              placeholder="e.g. 10 laptops, 5 bags of rice"
+            />
+            <p class="hint">Leave blank for cash donations</p>
+          </div>
 
-    <p id="message"></p>
+          <div class="form-group">
+            <label for="amount">Estimated Amount (₦)</label>
+            <input
+              type="number"
+              id="amount"
+              placeholder="e.g. 50000"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="contact">Contact (Phone / Email)</label>
+            <input
+              type="text"
+              id="contact"
+              placeholder="e.g. 0803 123 4567"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn" id="btn">Record Donation</button>
+          <div id="msg" class="msg"></div>
+        </form>
+      </div>
+    </main>
 
     <script>
-      const form = document.getElementById("donationForm");
-      const messageEl = document.getElementById("message");
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "/login.html";
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      document
+        .getElementById("donationForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("btn");
+          const msg = document.getElementById("msg");
+          btn.disabled = true;
+          msg.className = "msg";
 
-        const data = {
-          date: document.getElementById("date").value,
-          donorName: document.getElementById("donorName").value,
-          type: document.getElementById("type").value,
-          description: document.getElementById("description").value || null,
-          amount: Number(document.getElementById("amount").value),
-          contact: document.getElementById("contact").value,
-        };
+          const descriptionVal = document
+            .getElementById("description")
+            .value.trim();
 
-        try {
-          const response = await fetch("/api/donations", {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            body: JSON.stringify(data),
-          });
+          const data = {
+            date: document.getElementById("date").value,
+            donorName: document.getElementById("donorName").value.trim(),
+            type: document.getElementById("type").value,
+            description: descriptionVal || null,
+            amount: Number(document.getElementById("amount").value),
+            contact: document.getElementById("contact").value.trim(),
+          };
 
-          const result = await response.json();
+          try {
+            const response = await fetch("/api/donations", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify(data),
+            });
 
-          if (response.ok) {
-            messageEl.style.color = "green";
-            messageEl.textContent = "Donation recorded successfully!";
-            form.reset();
-          } else {
-            messageEl.style.color = "red";
-            messageEl.textContent = `Error: ${result.message}`;
+            const result = await response.json();
+
+            if (!response.ok)
+              throw new Error(result.message || "Failed to record");
+
+            msg.className = "msg success show";
+            msg.textContent = "✓ Donation recorded successfully";
+            document.getElementById("donationForm").reset();
+          } catch (error) {
+            msg.className = "msg error show";
+            msg.textContent = "✗ " + error.message;
+          } finally {
+            btn.disabled = false;
           }
-        } catch (error) {
-          messageEl.style.color = "red";
-          messageEl.textContent = "Server error. Please try again.";
-        }
-      });
+        });
     </script>
-    <a
-      href="/"
-      style="
-        display: block;
-        margin-bottom: 20px;
-        color: #6c757d;
-        text-decoration: none;
-        font-size: 0.9rem;
-      "
-      >← Back to Portal</a
-    >
   </body>
 </html>

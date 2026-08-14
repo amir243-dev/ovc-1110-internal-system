@@ -3,247 +3,502 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OVC1110 - Dashboard</title>
+    <title>Dashboard — OVC1110</title>
+    <link rel="icon" href="/gp.png" />
     <style>
-      :root {
-        --bg: #f8f9fa;
-        --text: #212529;
-        --muted: #6c757d;
-        --border: #dee2e6;
-        --accent: #495057;
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
+
+      :root {
+        --gp-green: #1a472a;
+        --gp-green-light: #2d6a4f;
+        --gp-cream: #f0f4f1;
+        --gp-white: #ffffff;
+        --gp-red: #b91c1c;
+        --gp-text: #1f2937;
+        --gp-muted: #6b7280;
+        --gp-border: #d1d5db;
+        --gp-shadow: 0 4px 24px rgba(26, 71, 42, 0.08);
+      }
+
       body {
         font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
-        margin: 0;
-        padding: 40px 20px;
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--gp-cream);
+        color: var(--gp-text);
         line-height: 1.6;
+        min-height: 100vh;
       }
-      .container {
-        max-width: 1000px;
-        margin: 0 auto;
+
+      .header {
+        background: var(--gp-green);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
       }
-      h1 {
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+      }
+      .header img {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      .header-text h1 {
+        color: var(--gp-white);
+        font-size: 1.05rem;
         font-weight: 600;
-        margin-bottom: 40px;
-        color: var(--accent);
+        letter-spacing: 0.3px;
       }
-      .section {
-        margin-bottom: 50px;
+      .header-text p {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.7rem;
+        font-weight: 400;
       }
-      h2 {
-        font-size: 1.25rem;
+      .logout-btn {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--gp-white);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 0.8rem;
         font-weight: 500;
-        margin-bottom: 15px;
-        border-bottom: 2px solid var(--border);
-        padding-bottom: 8px;
+        cursor: pointer;
+        font-family: inherit;
       }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #fff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
       }
-      th,
-      td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid var(--border);
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 24px 20px 60px;
+      }
+
+      .back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--gp-green-light);
+        text-decoration: none;
         font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 8px;
       }
-      th {
-        background-color: #fff;
-        font-weight: 600;
-        color: var(--muted);
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.5px;
+      .back:hover {
+        text-decoration: underline;
       }
-      tr:last-child td {
-        border-bottom: none;
+
+      .page-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--gp-green);
+        margin-bottom: 4px;
       }
-      .empty {
-        padding: 20px;
+      .page-subtitle {
+        font-size: 0.9rem;
+        color: var(--gp-muted);
+        margin-bottom: 24px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+      .stat-card {
+        background: var(--gp-white);
+        border-radius: 14px;
+        padding: 18px 16px;
+        box-shadow: var(--gp-shadow);
+        border: 1px solid #e5e7eb;
         text-align: center;
-        color: var(--muted);
-        font-style: italic;
+      }
+      .stat-icon {
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+      }
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gp-green);
+        line-height: 1.2;
+      }
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--gp-muted);
+        font-weight: 500;
+        margin-top: 4px;
+      }
+
+      .section {
+        margin-bottom: 28px;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gp-green);
+      }
+
+      .card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .list-card {
+        background: var(--gp-white);
+        border-radius: 12px;
+        padding: 14px 16px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .list-card-main {
+        min-width: 0;
+        flex: 1;
+      }
+      .list-card-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--gp-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .list-card-meta {
+        font-size: 0.8rem;
+        color: var(--gp-muted);
+        margin-top: 2px;
+      }
+      .list-card-amount {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--gp-green);
+        white-space: nowrap;
+      }
+      .list-card-date {
+        font-size: 0.75rem;
+        color: var(--gp-muted);
+        white-space: nowrap;
+      }
+
+      .empty-state {
+        background: var(--gp-white);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        color: var(--gp-muted);
+        font-size: 0.9rem;
+        border: 1px solid #e5e7eb;
+      }
+      .error-state {
+        background: #fee2e2;
+        color: var(--gp-red);
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+
+      @media (min-width: 640px) {
+        .stats-grid {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+        }
+        .stat-card {
+          padding: 22px 16px;
+        }
+        .stat-value {
+          font-size: 1.8rem;
+        }
+      }
+      @media (max-width: 480px) {
+        .header img {
+          width: 38px;
+          height: 38px;
+        }
+        .header-text h1 {
+          font-size: 0.95rem;
+        }
+        .stat-value {
+          font-size: 1.3rem;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>OVC1110 Internal Dashboard</h1>
+    <header class="header">
+      <a href="/" class="header-left">
+        <img src="/gp.png" alt="OVC1110 Logo" />
+        <div class="header-text">
+          <h1>Greenpeace OVC1110</h1>
+          <p>Helping Orphans & Vulnerable Children Escape Poverty</p>
+        </div>
+      </a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
 
-      <!-- Students -->
-      <div class="section">
-        <h2>Students</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Age</th>
-              <th>School</th>
-            </tr>
-          </thead>
-          <tbody id="students-body">
-            <tr>
-              <td colspan="3" class="empty">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
+    <main class="container">
+      <a href="/" class="back">← Back to Portal</a>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-subtitle">Overview of all program activities</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value" id="stat-students">—</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value" id="stat-expenses">—</div>
+          <div class="stat-label">Total Expenses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎁</div>
+          <div class="stat-value" id="stat-donations">—</div>
+          <div class="stat-label">Total Donations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value" id="stat-reports">—</div>
+          <div class="stat-label">Reports</div>
+        </div>
       </div>
 
-      <!-- Reports -->
-      <div class="section">
-        <h2>Activity Reports</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>Date</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-          <tbody id="reports-body">
-            <tr>
-              <td colspan="3" class="empty">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Students</h2>
+        </div>
+        <div class="card-list" id="list-students">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </section>
 
-      <!-- Attendance -->
-      <div class="section">
-        <h2>Attendance</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Program</th>
-              <th>Date</th>
-              <th>Supervisor</th>
-            </tr>
-          </thead>
-          <tbody id="attendance-body">
-            <tr>
-              <td colspan="3" class="empty">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Expenses</h2>
+        </div>
+        <div class="card-list" id="list-expenses">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </section>
 
-      <!-- Expenses -->
-      <div class="section">
-        <h2>Expenses</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Amount (NGN)</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="expenses-body">
-            <tr>
-              <td colspan="3" class="empty">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Reports</h2>
+        </div>
+        <div class="card-list" id="list-reports">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </section>
 
-      <!-- Donations -->
-      <div class="section">
-        <h2>Donations</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Donor</th>
-              <th>Type</th>
-              <th>Amount (NGN)</th>
-            </tr>
-          </thead>
-          <tbody id="donations-body">
-            <tr>
-              <td colspan="3" class="empty">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Attendance</h2>
+        </div>
+        <div class="card-list" id="list-attendance">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Donations</h2>
+        </div>
+        <div class="card-list" id="list-donations">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </section>
+    </main>
 
     <script>
-      // Reusable function to fetch and render data
-      async function loadModule(endpoint, tableId, renderRow) {
-        const tbody = document.getElementById(tableId);
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "/login.html";
+
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/login.html";
+      }
+
+      const formatDate = (d) => {
+        if (!d) return "—";
+        const date = new Date(d);
+        return date.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+      };
+
+      const formatCurrency = (n) => {
+        if (n === undefined || n === null) return "₦0";
+        return "₦" + Number(n).toLocaleString("en-NG");
+      };
+
+      const authHeaders = {
+        Authorization: "Bearer " + token,
+      };
+
+      async function fetchData(endpoint) {
+        const res = await fetch(endpoint, { headers: authHeaders });
+        if (!res.ok) throw new Error("Failed to load");
+        const result = await res.json();
+        return result.data || result || [];
+      }
+
+      function sortByDateDesc(arr) {
+        return [...arr].sort(
+          (a, b) =>
+            new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt),
+        );
+      }
+
+      function renderList(
+        containerId,
+        items,
+        renderFn,
+        emptyMsg = "No records yet.",
+      ) {
+        const container = document.getElementById(containerId);
+        if (!items || items.length === 0) {
+          container.innerHTML = `<div class="empty-state">${emptyMsg}</div>`;
+          return;
+        }
+        container.innerHTML = items.map(renderFn).join("");
+      }
+
+      async function loadDashboard() {
         try {
-          const response = await fetch(endpoint);
-          const result = await response.json();
+          const [students, expenses, reports, attendance, donations] =
+            await Promise.all([
+              fetchData("/api/students"),
+              fetchData("/api/expenses"),
+              fetchData("/api/reports"),
+              fetchData("/api/attendance"),
+              fetchData("/api/donations"),
+            ]);
 
-          tbody.innerHTML = ""; // Clear loading state
+          document.getElementById("stat-students").textContent =
+            students.length;
+          document.getElementById("stat-expenses").textContent = formatCurrency(
+            expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
+          );
+          document.getElementById("stat-donations").textContent =
+            formatCurrency(
+              donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
+            );
+          document.getElementById("stat-reports").textContent = reports.length;
 
-          if (result.success && result.data.length > 0) {
-            result.data.forEach((item) => {
-              tbody.innerHTML += renderRow(item);
-            });
-          } else {
-            tbody.innerHTML =
-              '<tr><td colspan="3" class="empty">No records found.</td></tr>';
-          }
-        } catch (error) {
-          tbody.innerHTML =
-            '<tr><td colspan="3" class="empty">Failed to load data.</td></tr>';
+          const recentStudents = sortByDateDesc(students).slice(0, 5);
+          renderList(
+            "list-students",
+            recentStudents,
+            (s) => `
+            <div class="list-card">
+              <div class="list-card-main">
+                <div class="list-card-title">${s.fullName || "Unnamed"}</div>
+                <div class="list-card-meta">${s.age || "—"} yrs • ${s.school || "—"}</div>
+              </div>
+              <div class="list-card-date">${formatDate(s.date || s.createdAt)}</div>
+            </div>
+          `,
+          );
+
+          const recentExpenses = sortByDateDesc(expenses).slice(0, 5);
+          renderList(
+            "list-expenses",
+            recentExpenses,
+            (e) => `
+            <div class="list-card">
+              <div class="list-card-main">
+                <div class="list-card-title">${e.item || "—"}</div>
+                <div class="list-card-meta">Approved by ${e.approvedBy || "—"}</div>
+              </div>
+              <div class="list-card-amount">${formatCurrency(e.amount)}</div>
+            </div>
+          `,
+          );
+
+          const recentReports = sortByDateDesc(reports).slice(0, 5);
+          renderList(
+            "list-reports",
+            recentReports,
+            (r) => `
+            <div class="list-card">
+              <div class="list-card-main">
+                <div class="list-card-title">${r.program || "—"}</div>
+                <div class="list-card-meta">${r.location || "—"} • ${r.numberOfChildren || 0} children</div>
+              </div>
+              <div class="list-card-date">${formatDate(r.date)}</div>
+            </div>
+          `,
+          );
+
+          const recentAttendance = sortByDateDesc(attendance).slice(0, 5);
+          renderList(
+            "list-attendance",
+            recentAttendance,
+            (a) => `
+            <div class="list-card">
+              <div class="list-card-main">
+                <div class="list-card-title">${a.program || "—"}</div>
+                <div class="list-card-meta">${a.students?.length || 0} students present</div>
+              </div>
+              <div class="list-card-date">${formatDate(a.date)}</div>
+            </div>
+          `,
+          );
+
+          const recentDonations = sortByDateDesc(donations).slice(0, 5);
+          renderList(
+            "list-donations",
+            recentDonations,
+            (d) => `
+            <div class="list-card">
+              <div class="list-card-main">
+                <div class="list-card-title">${d.donorName || "—"}</div>
+                <div class="list-card-meta">${d.type || "—"}${d.description ? " • " + d.description : ""}</div>
+              </div>
+              <div class="list-card-amount">${formatCurrency(d.amount)}</div>
+            </div>
+          `,
+          );
+        } catch (err) {
+          document.querySelector(".container").innerHTML += `
+            <div class="error-state" style="margin-top:20px">✗ Failed to load dashboard data. ${err.message}</div>
+          `;
         }
       }
 
-      // Initialize all modules
-      document.addEventListener("DOMContentLoaded", () => {
-        loadModule(
-          "/api/students",
-          "students-body",
-          (s) =>
-            `<tr><td>${s.fullName}</td><td>${s.age}</td><td>${s.school}</td></tr>`,
-        );
-
-        loadModule(
-          "/api/reports",
-          "reports-body",
-          (r) =>
-            `<tr><td>${r.program}</td><td>${new Date(r.date).toLocaleDateString()}</td><td>${r.location}</td></tr>`,
-        );
-
-        loadModule(
-          "/api/attendance",
-          "attendance-body",
-          (a) =>
-            `<tr><td>${a.program}</td><td>${new Date(a.date).toLocaleDateString()}</td><td>${a.supervisor}</td></tr>`,
-        );
-
-        loadModule(
-          "/api/expenses",
-          "expenses-body",
-          (e) =>
-            `<tr><td>${e.item}</td><td>₦${e.amount.toLocaleString()}</td><td>${new Date(e.date).toLocaleDateString()}</td></tr>`,
-        );
-
-        loadModule(
-          "/api/donations",
-          "donations-body",
-          (d) =>
-            `<tr><td>${d.donorName}</td><td>${d.type}</td><td>₦${d.amount.toLocaleString()}</td></tr>`,
-        );
-      });
+      loadDashboard();
     </script>
-    <a
-      href="/"
-      style="
-        display: block;
-        margin-bottom: 20px;
-        color: #6c757d;
-        text-decoration: none;
-        font-size: 0.9rem;
-      "
-      >← Back to Portal</a
-    >
   </body>
 </html>
