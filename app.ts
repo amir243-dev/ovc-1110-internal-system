@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/staff", staffRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/reports", reportRoutes);
