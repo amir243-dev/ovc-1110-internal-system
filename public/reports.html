@@ -130,7 +130,9 @@
         try {
           const response = await fetch("/api/reports", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
             body: JSON.stringify(data),
           });
 

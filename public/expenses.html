@@ -73,7 +73,9 @@
         try {
           const response = await fetch("/api/expenses", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
             body: JSON.stringify(data),
           });
 
