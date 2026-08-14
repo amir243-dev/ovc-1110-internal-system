@@ -4,7 +4,7 @@ import { protect, adminOnly } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
-router.post("/register", protect, adminOnly, registerStaff);
+router.post("/register", registerStaff);
 router.post("/login", loginStaff);
 
 export default router;
