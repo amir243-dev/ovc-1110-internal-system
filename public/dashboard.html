@@ -226,6 +226,15 @@
         font-size: 0.85rem;
         font-weight: 500;
       }
+      .section-error {
+        background: #fee2e2;
+        color: var(--gp-red);
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-top: 8px;
+      }
 
       @media (min-width: 640px) {
         .stats-grid {
@@ -369,7 +378,7 @@
 
       async function fetchData(endpoint) {
         const res = await fetch(endpoint, { headers: authHeaders });
-        if (!res.ok) throw new Error("Failed to load");
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const result = await res.json();
         return result.data || result || [];
       }
@@ -395,33 +404,37 @@
         container.innerHTML = items.map(renderFn).join("");
       }
 
-      async function loadDashboard() {
+      function showSectionError(containerId, message) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `<div class="section-error">✗ ${message}</div>`;
+      }
+
+      // Load each section independently so one failure doesn't kill the dashboard
+      async function loadSection(
+        endpoint,
+        containerId,
+        renderFn,
+        statCalc,
+        statId,
+      ) {
         try {
-          const [students, expenses, reports, attendance, donations] =
-            await Promise.all([
-              fetchData("/api/students"),
-              fetchData("/api/expenses"),
-              fetchData("/api/reports"),
-              fetchData("/api/attendance"),
-              fetchData("/api/donations"),
-            ]);
+          const data = await fetchData(endpoint);
+          if (statCalc && statId) {
+            document.getElementById(statId).textContent = statCalc(data);
+          }
+          renderList(containerId, sortByDateDesc(data).slice(0, 5), renderFn);
+        } catch (err) {
+          if (statId) document.getElementById(statId).textContent = "—";
+          showSectionError(containerId, "Failed to load: " + err.message);
+        }
+      }
 
-          document.getElementById("stat-students").textContent =
-            students.length;
-          document.getElementById("stat-expenses").textContent = formatCurrency(
-            expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
-          );
-          document.getElementById("stat-donations").textContent =
-            formatCurrency(
-              donations.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
-            );
-          document.getElementById("stat-reports").textContent = reports.length;
-
-          const recentStudents = sortByDateDesc(students).slice(0, 5);
-          renderList(
-            "list-students",
-            recentStudents,
-            (s) => `
+      async function loadDashboard() {
+        // Students (MongoDB — should work)
+        loadSection(
+          "/api/students",
+          "list-students",
+          (s) => `
             <div class="list-card">
               <div class="list-card-main">
                 <div class="list-card-title">${s.fullName || "Unnamed"}</div>
@@ -430,13 +443,15 @@
               <div class="list-card-date">${formatDate(s.date || s.createdAt)}</div>
             </div>
           `,
-          );
+          (data) => data.length,
+          "stat-students",
+        );
 
-          const recentExpenses = sortByDateDesc(expenses).slice(0, 5);
-          renderList(
-            "list-expenses",
-            recentExpenses,
-            (e) => `
+        // Expenses (Prisma/PostgreSQL — might be broken)
+        loadSection(
+          "/api/expenses",
+          "list-expenses",
+          (e) => `
             <div class="list-card">
               <div class="list-card-main">
                 <div class="list-card-title">${e.item || "—"}</div>
@@ -445,13 +460,18 @@
               <div class="list-card-amount">${formatCurrency(e.amount)}</div>
             </div>
           `,
-          );
+          (data) =>
+            formatCurrency(
+              data.reduce((sum, e) => sum + (Number(e.amount) || 0), 0),
+            ),
+          "stat-expenses",
+        );
 
-          const recentReports = sortByDateDesc(reports).slice(0, 5);
-          renderList(
-            "list-reports",
-            recentReports,
-            (r) => `
+        // Reports (MongoDB — should work)
+        loadSection(
+          "/api/reports",
+          "list-reports",
+          (r) => `
             <div class="list-card">
               <div class="list-card-main">
                 <div class="list-card-title">${r.program || "—"}</div>
@@ -460,13 +480,15 @@
               <div class="list-card-date">${formatDate(r.date)}</div>
             </div>
           `,
-          );
+          (data) => data.length,
+          "stat-reports",
+        );
 
-          const recentAttendance = sortByDateDesc(attendance).slice(0, 5);
-          renderList(
-            "list-attendance",
-            recentAttendance,
-            (a) => `
+        // Attendance (MongoDB — should work)
+        loadSection(
+          "/api/attendance",
+          "list-attendance",
+          (a) => `
             <div class="list-card">
               <div class="list-card-main">
                 <div class="list-card-title">${a.program || "—"}</div>
@@ -475,13 +497,15 @@
               <div class="list-card-date">${formatDate(a.date)}</div>
             </div>
           `,
-          );
+          null,
+          null,
+        );
 
-          const recentDonations = sortByDateDesc(donations).slice(0, 5);
-          renderList(
-            "list-donations",
-            recentDonations,
-            (d) => `
+        // Donations (MongoDB — should work)
+        loadSection(
+          "/api/donations",
+          "list-donations",
+          (d) => `
             <div class="list-card">
               <div class="list-card-main">
                 <div class="list-card-title">${d.donorName || "—"}</div>
@@ -490,12 +514,12 @@
               <div class="list-card-amount">${formatCurrency(d.amount)}</div>
             </div>
           `,
-          );
-        } catch (err) {
-          document.querySelector(".container").innerHTML += `
-            <div class="error-state" style="margin-top:20px">✗ Failed to load dashboard data. ${err.message}</div>
-          `;
-        }
+          (data) =>
+            formatCurrency(
+              data.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
+            ),
+          "stat-donations",
+        );
       }
 
       loadDashboard();
