@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
-const cors = require("cors");
-const path = require("path");
+import cors from "cors";
+import path from "path";
 import staffRoutes from "./routes/staff.routes";
 import studentRoutes from "./routes/student.routes";
-const reportRoutes = require("./routes/report.routes");
-const attendanceRoutes = require("./routes/attendance.routes");
+import reportRoutes from "./routes/report.routes";
+import attendanceRoutes from "./routes/attendance.routes";
 import expenseRoutes from "./routes/expense.routes";
-const donationRoutes = require("./routes/donation.routes");
-const { errorHandler, notFound } = require("./middleware/error.middleware");
+import donationRoutes from "./routes/donation.routes";
+import { errorHandler, notFound } from "./middleware/error.middleware";
 
 const app = express();
 

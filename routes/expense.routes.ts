@@ -6,6 +6,7 @@ import {
   deleteExpense,
 } from "../controllers/expense.controller";
 import { protect, adminOnly } from "../middleware/auth.middleware";
+
 const router = express.Router();
 
 router.post("/", protect, createExpense);

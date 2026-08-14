@@ -1,15 +1,16 @@
+import { Request, Response } from "express";
 import Attendance from "../models/attendance.model";
-const asyncHandler = require("../utils/asyncHandler");
-const sendResponse = require("../utils/apiResponse");
+import asyncHandler from "../utils/asyncHandler";
+import sendResponse from "../utils/apiResponse";
 
-const createAttendance = asyncHandler(async (req, res) => {
+const createAttendance = asyncHandler(async (req: Request, res: Response) => {
   const attendance = await Attendance.create(req.body);
   sendResponse(res, 201, attendance, "Attendance Entry saved Successfully");
 });
 
 // ===============================
 
-const getAttendance = asyncHandler(async (req, res) => {
+const getAttendance = asyncHandler(async (req: Request, res: Response) => {
   const attendance = await Attendance.find();
   sendResponse(
     res,
@@ -20,7 +21,8 @@ const getAttendance = asyncHandler(async (req, res) => {
 });
 
 // =====================================
-const getAttendanceByID = asyncHandler(async (req, res, next) => {
+
+const getAttendanceByID = asyncHandler(async (req: Request, res: Response) => {
   // 1. Try to find the student
   const attendance = await Attendance.findById(req.params.id);
 
@@ -34,4 +36,4 @@ const getAttendanceByID = asyncHandler(async (req, res, next) => {
   sendResponse(res, 200, attendance, "Attendance Retrieved successfully");
 });
 
-module.exports = { createAttendance, getAttendance, getAttendanceByID };
+export { createAttendance, getAttendance, getAttendanceByID };

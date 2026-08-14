@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OVC1110 - Login</title>
+    <link rel="icon" href="/gp.png" />
+    <style>
+      :root {
+        --bg: #f8f9fa;
+        --text: #212529;
+        --muted: #6c757d;
+        --border: #dee2e6;
+        --accent: #495057;
+        --card-bg: #ffffff;
+        --error: #dc3545;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      .login-box {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 40px;
+        width: 100%;
+        max-width: 360px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      h1 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0 0 8px 0;
+        color: var(--accent);
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 28px;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+      input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        font-family: inherit;
+      }
+      input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        background-color: var(--accent);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      button:hover {
+        opacity: 0.92;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .error {
+        color: var(--error);
+        font-size: 0.85rem;
+        margin-top: 12px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-box">
+      <h1>Greenpeace OVC1110</h1>
+      <p class="subtitle">Staff Login</p>
+
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="amir@test.com"
+        />
+
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          placeholder="••••••••"
+        />
+
+        <button type="submit" id="btn">Log In</button>
+        <p class="error" id="errorMsg"></p>
+      </form>
+    </div>
+
+    <script>
+      // If already logged in, skip login
+      if (localStorage.getItem("token")) {
+        window.location.href = "/";
+      }
+
+      const form = document.getElementById("loginForm");
+      const btn = document.getElementById("btn");
+      const errorMsg = document.getElementById("errorMsg");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        btn.disabled = true;
+        btn.textContent = "Logging in...";
+        errorMsg.style.display = "none";
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const res = await fetch("/api/staff/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.message || "Login failed");
+          }
+
+          // Save token and redirect
+          localStorage.setItem("token", data.data.token);
+          window.location.href = "/";
+        } catch (err) {
+          errorMsg.textContent = err.message;
+          errorMsg.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Log In";
+        }
+      });
+    </script>
+  </body>
+</html>

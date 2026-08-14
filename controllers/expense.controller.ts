@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../utils/prismaClient";
 import asyncHandler from "../utils/asyncHandler";
 import sendResponse from "../utils/apiResponse";
-import { send } from "node:process";
 
 const createExpense = asyncHandler(async (req: Request, res: Response) => {
   const { date, item, amount, approvedBy } = req.body;

@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-// THE INTERFACE AGAIN.
-
 export interface IDonations extends Document {
   date: Date;
   donorName: string;
@@ -15,8 +13,6 @@ export interface IDonations extends Document {
 const donationSchema = new Schema<IDonations>({
   date: { type: Date, required: true },
   donorName: { type: String, required: true },
-  // 'type' is a reserved word in some contexts, but fine as a key.
-  // Using enum to restrict it to Cash or Kind (goods).
   type: { type: String, required: true, enum: ["Cash", "Kind"] },
   description: { type: String },
   amount: { type: Number, required: true },

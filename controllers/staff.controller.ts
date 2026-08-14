@@ -6,7 +6,7 @@ import sendResponse from "../utils/apiResponse";
 
 const SECRET = process.env.JWT_SECRET || "fallback-dev-secret";
 
-// @desc    Register new staff (so you can create a user to test login)
+// @desc    Register new staff
 
 const registerStaff = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
@@ -35,7 +35,9 @@ const registerStaff = asyncHandler(async (req: Request, res: Response) => {
   );
 });
 
+// ===================================
 // @desc    Login staff
+
 const loginStaff = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const staff = await Staff.findOne({ email });

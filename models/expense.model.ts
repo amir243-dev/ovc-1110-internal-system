@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-// THE INTERFACE - GETTING THE HANG
-
 export interface IExpenses extends Document {
   date: Date;
   item: string;
@@ -13,7 +11,6 @@ export interface IExpenses extends Document {
 const expenseSchema = new Schema<IExpenses>({
   date: { type: Date, required: true },
   item: { type: String, required: true },
-  // Number type ensures you can do math on this later (like calculating total expenses)
   amount: { type: Number, required: true },
   approvedBy: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },

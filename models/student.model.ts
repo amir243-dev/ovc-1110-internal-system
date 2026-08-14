@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+
 export interface IStudents extends Document {
   fullName: string;
   age: number;

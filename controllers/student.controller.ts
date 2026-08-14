@@ -2,11 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import Student from "../models/student.model";
 import asyncHandler from "../utils/asyncHandler";
 import sendResponse from "../utils/apiResponse";
-// =======================================================
-// 1. TYPING THE PARAMETERS
-// In JS, req and res were just objects.
-// In TS, we import their types from Express so the editor knows what methods they have (like res.status()).
-// NextFunction is the type for 'next'. It tells TS this function can accept an error to pass down the chain (to your error.middleware).
 
 // @desc    Create a new student
 
@@ -40,5 +35,5 @@ const getStudentByID = asyncHandler(
     sendResponse(res, 200, student, "Student retrieved successfully");
   },
 );
-// /=======================================================
+
 export { createStudent, getStudents, getStudentByID };

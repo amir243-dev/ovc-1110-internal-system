@@ -1,23 +1,25 @@
+import { Request, Response } from "express";
 import Donation from "../models/donation.model";
-const asyncHandler = require("../utils/asyncHandler");
-const sendResponse = require("../utils/apiResponse");
+import asyncHandler from "../utils/asyncHandler";
+import sendResponse from "../utils/apiResponse";
 
 // =======================================================
 
-const createDonation = asyncHandler(async (req, res) => {
+const createDonation = asyncHandler(async (req: Request, res: Response) => {
   const donation = await Donation.create(req.body);
   sendResponse(res, 201, donation, "Donation saved successfully");
 });
 
 // ====================================================
 
-const getDonations = asyncHandler(async (req, res) => {
+const getDonations = asyncHandler(async (req: Request, res: Response) => {
   const donations = await Donation.find();
   sendResponse(res, 200, donations, "Donations retrieved Successfully");
 });
 
 // ======================================================
-const getDonationByID = asyncHandler(async (req, res, next) => {
+
+const getDonationByID = asyncHandler(async (req: Request, res: Response) => {
   // 1. Try to find the student
   const donation = await Donation.findById(req.params.id);
 
@@ -31,4 +33,4 @@ const getDonationByID = asyncHandler(async (req, res, next) => {
   sendResponse(res, 200, donation, "Donation Retrieved successfully");
 });
 
-module.exports = { createDonation, getDonations, getDonationByID };
+export { createDonation, getDonations, getDonationByID };
