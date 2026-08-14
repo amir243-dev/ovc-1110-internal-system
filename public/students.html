@@ -3,128 +3,174 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OVC1110 - Add Student</title>
+    <title>Register Student</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 40px auto;
-        padding: 20px;
+      :root {
+        --bg: #f8f9fa;
+        --text: #212529;
+        --muted: #6c757d;
+        --border: #dee2e6;
+        --accent: #495057;
+        --card-bg: #ffffff;
+        --success: #28a745;
+        --error: #dc3545;
       }
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 40px 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: var(--accent);
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+      }
+      .back {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: block;
+        margin-bottom: 20px;
+      }
+      .back:hover {
+        text-decoration: underline;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+        margin-top: 16px;
       }
       input,
       select {
-        padding: 8px;
-        font-size: 16px;
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        box-sizing: border-box;
+        font-family: inherit;
       }
       button {
-        padding: 10px;
-        background-color: #28a745;
-        color: white;
+        width: 100%;
+        padding: 12px;
+        margin-top: 24px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        background: var(--success);
         border: none;
-        font-size: 16px;
+        border-radius: 6px;
         cursor: pointer;
       }
-      button:hover {
-        background-color: #218838;
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
-      #message {
-        margin-top: 20px;
-        font-weight: bold;
+      .msg {
+        margin-top: 16px;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        display: none;
+      }
+      .msg.error {
+        background: #f8d7da;
+        color: #721c24;
+        display: block;
+      }
+      .msg.success {
+        background: #d4edda;
+        color: #155724;
+        display: block;
       }
     </style>
   </head>
   <body>
+    <a href="/" class="back">← Back to Portal</a>
     <h1>Register New Student</h1>
 
     <form id="studentForm">
-      <input type="text" id="fullName" placeholder="Full Name" required />
-      <input type="number" id="age" placeholder="Age" required />
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" required />
 
+      <label for="age">Age</label>
+      <input type="number" id="age" required />
+
+      <label for="gender">Gender</label>
       <select id="gender" required>
-        <option value="">Select Gender</option>
+        <option value="">Select</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
       </select>
 
-      <input type="text" id="school" placeholder="School" required />
-      <input
-        type="text"
-        id="guardianName"
-        placeholder="Guardian Name"
-        required
-      />
-      <input
-        type="text"
-        id="guardianPhone"
-        placeholder="Guardian Phone"
-        required
-      />
+      <label for="school">School</label>
+      <input type="text" id="school" required />
 
-      <button type="submit">Register Student</button>
+      <label for="guardianName">Guardian Name</label>
+      <input type="text" id="guardianName" required />
+
+      <label for="guardianPhone">Guardian Phone</label>
+      <input type="text" id="guardianPhone" required />
+
+      <button type="submit" id="btn">Register Student</button>
+      <div id="msg" class="msg"></div>
     </form>
 
-    <p id="message"></p>
-
     <script>
-      const form = document.getElementById("studentForm");
-      const messageEl = document.getElementById("message");
+      const token = localStorage.getItem("token");
+      if (!token) window.location.href = "/login.html";
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault(); // Stop page reload
+      document
+        .getElementById("studentForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("btn");
+          const msg = document.getElementById("msg");
+          btn.disabled = true;
+          msg.style.display = "none";
 
-        // 1. Gather data from the form
-        const data = {
-          fullName: document.getElementById("fullName").value,
-          age: Number(document.getElementById("age").value),
-          gender: document.getElementById("gender").value,
-          school: document.getElementById("school").value,
-          guardianName: document.getElementById("guardianName").value,
-          guardianPhone: document.getElementById("guardianPhone").value,
-          needs: [], // Empty array for now
-        };
+          const body = {
+            fullName: document.getElementById("fullName").value,
+            age: Number(document.getElementById("age").value),
+            gender: document.getElementById("gender").value,
+            school: document.getElementById("school").value,
+            guardianName: document.getElementById("guardianName").value,
+            guardianPhone: document.getElementById("guardianPhone").value,
+          };
 
-        try {
-          // 2. Send POST request to your backend
-          const response = await fetch("/api/students", {
-            method: "POST",
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            body: JSON.stringify(data),
-          });
+          try {
+            const res = await fetch("/api/students", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify(body),
+            });
 
-          const result = await response.json();
+            const data = await res.json();
 
-          // 3. Handle the response
-          if (response.ok) {
-            messageEl.style.color = "green";
-            messageEl.textContent = "Student registered successfully!";
-            form.reset(); // Clear the form
-          } else {
-            messageEl.style.color = "red";
-            messageEl.textContent = `Error: ${result.message}`;
+            if (!res.ok) throw new Error(data.message || "Failed to register");
+
+            msg.className = "msg success";
+            msg.textContent = "Student registered successfully!";
+            msg.style.display = "block";
+            document.getElementById("studentForm").reset();
+          } catch (err) {
+            msg.className = "msg error";
+            msg.textContent = err.message;
+            msg.style.display = "block";
+          } finally {
+            btn.disabled = false;
           }
-        } catch (error) {
-          messageEl.style.color = "red";
-          messageEl.textContent = "Server error. Please try again.";
-        }
-      });
+        });
     </script>
-    <a
-      href="/"
-      style="
-        display: block;
-        margin-bottom: 20px;
-        color: #6c757d;
-        text-decoration: none;
-        font-size: 0.9rem;
-      "
-      >← Back to Portal</a
-    >
   </body>
 </html>
